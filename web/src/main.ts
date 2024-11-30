@@ -15,6 +15,9 @@ import "./index.css";
 import VueLazyLoad from "vue3-lazyload";
 import i18n from "@/locales";
 import VueNativeSock from "vue-native-websocket-vue3";
+import { registerPWA } from "./utils/pwa";
+
+registerPWA();
 
 // 后端调用统一为/api/book/:id的形式
 axios.defaults.baseURL = "/api";

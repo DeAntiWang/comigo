@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import fs from 'fs';
 import path from "path";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
@@ -61,6 +62,14 @@ export default defineConfig({
           },
         ],
       },
+      devOptions: {
+        enabled: true,
+        type: 'module',
+      },
+      strategies: 'injectManifest',
+      srcDir: 'public',
+      filename: 'service-worker.js',
+      injectRegister: 'auto',
     }),
   ],
   server: {
@@ -104,6 +113,11 @@ export default defineConfig({
       "/index.html": {
         ignorePath: true, //不知道有没有用╮(￣▽￣")╭
       },
+    },
+    // PWA 依赖 https 协议访问才能生成安装入口，当你不需要调试 PWA manifest 的时候可以注释掉
+    https: {
+      key: fs.readFileSync(path.resolve(__dirname, './public/cert/localhost-key.pem')),
+      cert: fs.readFileSync(path.resolve(__dirname, './public/cert/localhost.pem')),
     },
   },
   build: {
