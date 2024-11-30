@@ -11,6 +11,7 @@ import { viteCommonjs } from "@originjs/vite-plugin-commonjs";
 import legacy from "@vitejs/plugin-legacy";
 // VueDevtools():  https://v2ex.com/t/939478#reply9
 import VueDevtools from 'vite-plugin-vue-devtools'
+import { VitePWA } from 'vite-plugin-pwa'
 // https://vitejs.dev/config/
 export default defineConfig({
   // 静态资源基础路径 base: './' || '',
@@ -43,6 +44,23 @@ export default defineConfig({
     VueDevtools(),
     legacy({
       targets: ["defaults", "not IE 11"],
+    }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.ico'],
+      manifest: {
+        name: 'Comigo',
+        short_name: 'Comigo',
+        description: 'Comigo Web App',
+        theme_color: '#ffffff',
+        icons: [
+          {
+            src: 'favicon.ico',
+            sizes: '256x256',
+            type: 'image/x-icon'
+          },
+        ],
+      },
     }),
   ],
   server: {
