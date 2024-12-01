@@ -22,3 +22,8 @@ pnpm-debug.log*
 *.sln
 *.sw?
 *.pdf
+package-lock.json
+
+# PWA files
+**/dev-dist
+**/dist-pwa

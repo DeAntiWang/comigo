@@ -1,16 +1,12 @@
 <template>
   <!-- 外边距: m-2 https://www.tailwindcss.cn/docs/margin -->
   <!-- 内边距： p-4 https://www.tailwindcss.cn/docs/padding  p-0 m-0  -->
-  <header class="header p-1 h-12 w-full flex flex-row justify-between content-center">
-    <div class="flex flex-row">
+  <header class="header py-2 px-4 h-12 w-full flex flex-row justify-between items-center content-center">
+    <div class="gap-3 flex flex-row items-center">
       <!-- 返回箭头,点击返回上一页 -->
-      <n-tooltip placement="bottom" trigger="hover">
+      <n-tooltip placement="bottom" trigger="hover" v-if="showReturnIcon">
         <template #trigger>
-          <div class="p-0 m-0">
-            <n-icon class="p-0 mx-1 my-0" v-if="showReturnIcon" size="40" @click="onClickReturnIcon()">
-              <return-up-back />
-            </n-icon>
-          </div>
+          <i class="icon icon-return" @click="onClickReturnIcon()"></i>
         </template>
         <span>{{ $t("back_button") }}</span>
       </n-tooltip>
@@ -18,16 +14,7 @@
       <!-- 服务器设置 -->
       <n-tooltip placement="bottom" trigger="hover">
         <template #trigger>
-          <div class="p-0 m-0">
-            <n-icon @title='$t("server_config")' class="p-0 mx-1 my-0" v-if="!showReturnIcon" @click="ToAdminPage()"
-              size="40">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z" />
-              </svg>
-            </n-icon>
-          </div>
+          <i v-if="!showReturnIcon" class="icon icon-server" role="button" @click="ToAdminPage()"></i>
         </template>
         <span>{{ $t("server_config") }}</span>
       </n-tooltip>
@@ -35,29 +22,14 @@
       <!-- 上传按钮，点击进入上传页面 -->
       <n-tooltip placement="bottom" trigger="hover">
         <template #trigger>
-          <div class="p-0 m-0">
-            <n-icon class="p-0 mx-1 my-0" v-if="!showReturnIcon" @click="gotoUploadPage()" size="40">
-              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512">
-                <path
-                  d="M320 367.79h76c55 0 100-29.21 100-83.6s-53-81.47-96-83.6c-8.89-85.06-71-136.8-144-136.8c-69 0-113.44 45.79-128 91.2c-60 5.7-112 43.88-112 106.4s54 106.4 120 106.4h56"
-                  fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32">
-                </path>
-                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"
-                  d="M320 255.79l-64-64l-64 64"></path>
-                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"
-                  d="M256 448.21V207.79"></path>
-              </svg>
-            </n-icon>
-          </div>
+          <i class="icon icon-upload" v-if="!showReturnIcon" @click="gotoUploadPage()"></i>
         </template>
         <span>{{ $t("upload_file") }}</span>
       </n-tooltip>
 
       <!-- 文件重排序 -->
       <n-dropdown v-if="showReSortIcon" trigger="hover" :options="options" @select="onSelect">
-        <n-icon class="w-10" size="40">
-          <Filter />
-        </n-icon>
+        <i class="icon icon-filter"></i>
       </n-dropdown>
     </div>
 
@@ -71,7 +43,7 @@
       <span class="text-lg" v-if="!setDownLoadLink && (inShelf)">{{ headerTitle }}</span>
       <!-- 标题，可下载压缩包 -->
       <span class="text-lg text-blue-700 text-opacity-100  hover:underline">
-        <a v-if="setDownLoadLink && (inShelf)" :href="'api/raw/' + bookID + '/' + encodeURIComponent(headerTitle)">{{
+        <a v-if="setDownLoadLink && (inShelf)" :href="`api/raw/${bookID}/${encodeURIComponent(headerTitle)}`">{{
           headerTitle
         }}</a>
       </span>
@@ -83,13 +55,12 @@
     <!-- <slot></slot> -->
 
     <!-- 溢出 overflow-x-auton :https://www.tailwindcss.cn/docs/overflow -->
-    <div class="p-0 h-10 w-33 flex justify-between content-center overflow-x-auton">
-
+    <div class="gap-3 p-0 h-10 w-33 flex items-center justify-between content-center overflow-x-auton">
       <!-- 扫码阅读，点击可以在屏幕正中显示二维码 -->
       <n-tooltip placement="bottom" trigger="hover">
         <template #trigger>
-          <div class="p-0 m-0">
-            <Qrcode class="w-10 p-0"></Qrcode>
+          <div class="icon icon-qrcode">
+            <Qrcode class="w-full h-full opacity-0"></Qrcode>
           </div>
         </template>
         <span>{{ $t("qrcode_hint") }}</span>
@@ -99,19 +70,7 @@
       <n-tooltip placement="bottom" trigger="hover">
         <template #trigger>
           <div class="p-0 m-0">
-            <svg class="w-10 static" @click="onFullScreen" xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
-              <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M16 4h4v4"></path>
-                <path d="M14 10l6-6"></path>
-                <path d="M8 20H4v-4"></path>
-                <path d="M4 20l6-6"></path>
-                <path d="M16 20h4v-4"></path>
-                <path d="M14 14l6 6"></path>
-                <path d="M8 4H4v4"></path>
-                <path d="M4 4l6 6"></path>
-              </g>
-            </svg>
+            <i class="icon icon-fullscreen" @click="onFullScreen"></i>
           </div>
         </template>
         <span>{{ $t("full_screen_hint") }}</span>
@@ -120,28 +79,24 @@
       <!-- 阅读器设定,点击屏幕中央也可以打开  可自定义方向 -->
       <n-tooltip placement="bottom" trigger="hover">
         <template #trigger>
-          <div class="p-0 m-0">
-            <n-icon v-if="showSettingsIcon" class="w-10" size="40" @click="onClickSettingIcon('right')">
-              <settings-outline />
-            </n-icon>
-          </div>
+          <i class="icon icon-setting" v-if="showSettingsIcon" @click="onClickSettingIcon('right')"></i>
         </template>
         <span>{{ $t("ReaderSettings") }}</span>
       </n-tooltip>
-
     </div>
   </header>
 </template>
 
 <script lang="ts">
+import axios from "axios";
+import screenfull from 'screenfull'
+import { h, defineComponent } from 'vue'
 import { useCookies } from "vue3-cookies";
 import { NIcon, NDropdown, useMessage, NTooltip } from 'naive-ui'
 import { ReturnUpBack, SettingsOutline, Grid, List, Filter, Text } from '@vicons/ionicons5'
-import { h, defineComponent } from 'vue'
+
 import Qrcode from "@/components/Qrcode.vue";
-import screenfull from 'screenfull'
 import QuickJumpBar from "@/components/QuickJumpBar.vue";
-import axios from "axios";
 
 export default defineComponent({
   name: "ComigoHeader",
@@ -166,7 +121,7 @@ export default defineComponent({
     // console.log(window.history)
     //警告信息
     const message = useMessage();
-    return { cookies, message, };
+    return { cookies, message };
   },
   data() {
     return {
@@ -230,7 +185,8 @@ export default defineComponent({
       ],
       handleSelect(key: string | number) {
         console.info(String(key))
-      }
+      },
+      showQrcode: false,
     };
   },
   methods: {
@@ -283,12 +239,54 @@ export default defineComponent({
       this.$emit("drawerActivate", place);
     },
 
+    // 点击 qrcode icon 展示二维码大图
+    handleClickQrcode() {
+      this.showQrcode = true;
+    },
   },
 });
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style lang="less" scoped>
+.icon {
+  display: block;
+  font-size: 28px;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+.icon-server {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='w-6 h-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z'/%3E%3C/svg%3E");
+}
+
+.icon-upload {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 512 512'%3E%3Cpath d='M320 367.79h76c55 0 100-29.21 100-83.6s-53-81.47-96-83.6c-8.89-85.06-71-136.8-144-136.8c-69 0-113.44 45.79-128 91.2c-60 5.7-112 43.88-112 106.4s54 106.4 120 106.4h56' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='32'%3E%3C/path%3E%3Cpath fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='32' d='M320 255.79l-64-64l-64 64'%3E%3C/path%3E%3Cpath fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='32' d='M256 448.21V207.79'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.icon-fullscreen {
+  mask-image: url("data:image/svg+xml,%3Csvg class='w-10 static' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 4h4v4'%3E%3C/path%3E%3Cpath d='M14 10l6-6'%3E%3C/path%3E%3Cpath d='M8 20H4v-4'%3E%3C/path%3E%3Cpath d='M4 20l6-6'%3E%3C/path%3E%3Cpath d='M16 20h4v-4'%3E%3C/path%3E%3Cpath d='M14 14l6 6'%3E%3C/path%3E%3Cpath d='M8 4H4v4'%3E%3C/path%3E%3Cpath d='M4 4l6 6'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+}
+
+.icon-qrcode {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 512 512'%3E%3Crect x='336' y='336' width='80' height='80' rx='8' ry='8' fill='currentColor'%3E%3C/rect%3E%3Crect x='272' y='272' width='64' height='64' rx='8' ry='8' fill='currentColor'%3E%3C/rect%3E%3Crect x='416' y='416' width='64' height='64' rx='8' ry='8' fill='currentColor'%3E%3C/rect%3E%3Crect x='432' y='272' width='48' height='48' rx='8' ry='8' fill='currentColor'%3E%3C/rect%3E%3Crect x='272' y='432' width='48' height='48' rx='8' ry='8' fill='currentColor'%3E%3C/rect%3E%3Cpath d='M448 32H304a32 32 0 0 0-32 32v144a32 32 0 0 0 32 32h144a32 32 0 0 0 32-32V64a32 32 0 0 0-32-32zm-32 136a8 8 0 0 1-8 8h-64a8 8 0 0 1-8-8v-64a8 8 0 0 1 8-8h64a8 8 0 0 1 8 8z' fill='currentColor'%3E%3C/path%3E%3Cpath d='M208 32H64a32 32 0 0 0-32 32v144a32 32 0 0 0 32 32h144a32 32 0 0 0 32-32V64a32 32 0 0 0-32-32zm-32 136a8 8 0 0 1-8 8h-64a8 8 0 0 1-8-8v-64a8 8 0 0 1 8-8h64a8 8 0 0 1 8 8z' fill='currentColor'%3E%3C/path%3E%3Cpath d='M208 272H64a32 32 0 0 0-32 32v144a32 32 0 0 0 32 32h144a32 32 0 0 0 32-32V304a32 32 0 0 0-32-32zm-32 136a8 8 0 0 1-8 8h-64a8 8 0 0 1-8-8v-64a8 8 0 0 1 8-8h64a8 8 0 0 1 8 8z' fill='currentColor'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.icon-filter {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 512 512'%3E%3Cpath fill='none' stroke='currentColor' stroke-width='32' stroke-miterlimit='10' d='M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192s192-86 192-192z'%3E%3C/path%3E%3Cpath fill='none' stroke='currentColor' stroke-width='32' stroke-linecap='round' stroke-linejoin='round' d='M144 208h224'%3E%3C/path%3E%3Cpath fill='none' stroke='currentColor' stroke-width='32' stroke-linecap='round' stroke-linejoin='round' d='M176 272h160'%3E%3C/path%3E%3Cpath fill='none' stroke='currentColor' stroke-width='32' stroke-linecap='round' stroke-linejoin='round' d='M224 336h64'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.icon-setting {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 512 512'%3E%3Cpath d='M262.29 192.31a64 64 0 1 0 57.4 57.4a64.13 64.13 0 0 0-57.4-57.4zM416.39 256a154.34 154.34 0 0 1-1.53 20.79l45.21 35.46a10.81 10.81 0 0 1 2.45 13.75l-42.77 74a10.81 10.81 0 0 1-13.14 4.59l-44.9-18.08a16.11 16.11 0 0 0-15.17 1.75A164.48 164.48 0 0 1 325 400.8a15.94 15.94 0 0 0-8.82 12.14l-6.73 47.89a11.08 11.08 0 0 1-10.68 9.17h-85.54a11.11 11.11 0 0 1-10.69-8.87l-6.72-47.82a16.07 16.07 0 0 0-9-12.22a155.3 155.3 0 0 1-21.46-12.57a16 16 0 0 0-15.11-1.71l-44.89 18.07a10.81 10.81 0 0 1-13.14-4.58l-42.77-74a10.8 10.8 0 0 1 2.45-13.75l38.21-30a16.05 16.05 0 0 0 6-14.08c-.36-4.17-.58-8.33-.58-12.5s.21-8.27.58-12.35a16 16 0 0 0-6.07-13.94l-38.19-30A10.81 10.81 0 0 1 49.48 186l42.77-74a10.81 10.81 0 0 1 13.14-4.59l44.9 18.08a16.11 16.11 0 0 0 15.17-1.75A164.48 164.48 0 0 1 187 111.2a15.94 15.94 0 0 0 8.82-12.14l6.73-47.89A11.08 11.08 0 0 1 213.23 42h85.54a11.11 11.11 0 0 1 10.69 8.87l6.72 47.82a16.07 16.07 0 0 0 9 12.22a155.3 155.3 0 0 1 21.46 12.57a16 16 0 0 0 15.11 1.71l44.89-18.07a10.81 10.81 0 0 1 13.14 4.58l42.77 74a10.8 10.8 0 0 1-2.45 13.75l-38.21 30a16.05 16.05 0 0 0-6.05 14.08c.33 4.14.55 8.3.55 12.47z' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='32'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.icon-return {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 512 512'%3E%3Cpath fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='32' d='M112 160l-64 64l64 64'%3E%3C/path%3E%3Cpath d='M64 224h294c58.76 0 106 49.33 106 108v20' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='32'%3E%3C/path%3E%3C/svg%3E");
+}
+</style>
 
 
 

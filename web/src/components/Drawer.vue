@@ -39,6 +39,7 @@
     </n-drawer-content>
   </n-drawer>
 </template>
+
 <script lang="ts">
 import screenfull from 'screenfull'
 import { useCookies } from "vue3-cookies";
@@ -46,6 +47,7 @@ import { NDrawer, NDrawerContent, NButton, NSelect, NPopconfirm, useMessage, NSp
 import { defineComponent, } from 'vue'
 // import { useI18n } from 'vue-i18n'
 import Qrcode from "@/components/Qrcode.vue";
+
 export default defineComponent({
   name: "SettingsDrawer",
   props: ['book', 'initDrawerActive', 'initDrawerPlacement', 'readerMode', 'inBookShelf', "sketching"],
@@ -189,7 +191,3 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped></style>
-
-
-
-
