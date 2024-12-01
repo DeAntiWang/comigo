@@ -10,4 +10,8 @@ export function registerPWA() {
         });
     });
   }
+
+  window.addEventListener('beforeinstallprompt', (event) => {
+    console.log('beforeinstallprompt event:', event);
+  });
 }

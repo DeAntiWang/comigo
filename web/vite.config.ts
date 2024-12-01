@@ -48,7 +48,7 @@ export default defineConfig({
     }),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico'],
+      includeAssets: ['/images/favicon.ico'],
       manifest: {
         name: 'Comigo',
         short_name: 'Comigo',
@@ -56,7 +56,7 @@ export default defineConfig({
         theme_color: '#ffffff',
         icons: [
           {
-            src: 'favicon.ico',
+            src: '/images/favicon.ico',
             sizes: '256x256',
             type: 'image/x-icon'
           },
